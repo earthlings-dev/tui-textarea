@@ -1,8 +1,8 @@
 [package]
 name = "tui-textarea"
 version = "0.7.0"
-edition = "2021"
-rust-version = "1.56.1" # for `tui` crate support
+edition.workspace = true
+rust-version.workspace = true
 authors = ["rhysd <lin90162@yahoo.co.jp>"]
 description = """
 tui-textarea is a simple yet powerful text editor widget for ratatui and tui-rs. Multi-line
@@ -26,8 +26,8 @@ termwiz = ["ratatui", "dep:termwiz", "ratatui/termwiz"]
 no-backend = ["ratatui"]
 # Features to use tui-rs
 tuirs = ["dep:tui"]
-tuirs-crossterm = ["tuirs", "dep:crossterm-025", "tui/crossterm"]
-tuirs-termion = ["tuirs", "dep:termion-15", "tui/termion"]
+tuirs-crossterm = ["tuirs", "tui/crossterm"]
+tuirs-termion = ["tuirs", "tui/termion"]
 tuirs-no-backend = ["tuirs"]
 # Other optional features
 search = ["dep:regex"]
@@ -35,17 +35,15 @@ serde = ["dep:serde"]
 arbitrary = ["dep:arbitrary"]
 
 [dependencies]
-arbitrary = { version = "1", features = ["derive"], optional = true }
-crossterm = { package = "crossterm", version = "0.28", optional = true }
-crossterm-025 = { package = "crossterm", version = "0.25", optional = true }
-ratatui = { version = "0.29.0", default-features = false, optional = true }
-regex = { version = "1", optional = true }
-termion = { version = "4.0", optional = true }
-termion-15 = { package = "termion", version = "1.5", optional = true }
-termwiz = { version = "0.22.0", optional = true }
-tui = { version = "0.19", default-features = false, optional = true }
-unicode-width = "0.2.0"
-serde = { version = "1", optional = true , features = ["derive"] }
+arbitrary = { workspace = true, features = ["derive"], optional = true }
+crossterm = { workspace = true, optional = true }
+ratatui = { workspace = true, optional = true }
+regex = { workspace = true, optional = true }
+termion = { workspace = true, optional = true }
+termwiz = { workspace = true, optional = true }
+tui = { workspace = true, optional = true }
+unicode-width = { workspace = true }
+serde = { workspace = true, features = ["derive"], optional = true }
 
 [[example]]
 name = "minimal"
@@ -102,11 +100,50 @@ required-features = ["tuirs-termion"]
 [workspace]
 members = ["bench"]
 
+[workspace.package]
+edition = "2024"
+rust-version = "1.93"
+
+[workspace.dependencies]
+# Internal
+tui-textarea = { path = ".", version = "0.7.0" }
+# External
+arbitrary = { version = "1", features = ["derive"] }
+criterion = { version = "0.8" }
+crossterm = { version = "0.29" }
+rand = { version = "0.10.0" }
+ratatui = { version = "0.30.0", default-features = false }
+regex = { version = "1" }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1.0.149" }
+termion = { version = "4.0" }
+termwiz = { version = "0.23.3" }
+tui = { version = "0.19", default-features = false }
+unicode-width = { version = "0.2.2" }
+
+[patch.crates-io]
+crossterm = { git = "https://github.com/takumi-earth/crossterm.git" }
+ratatui = { git = "https://github.com/takumi-earth/ratatui.git" }
+rand = { git = "https://github.com/earthlings-dev/rand.git" }
+rand_core = { git = "https://github.com/earthlings-dev/rand_core.git" }
+getrandom = { git = "https://github.com/earthlings-dev/getrandom.git" }
+serde = { git = "https://github.com/earthlings-dev/serde.git" }
+serde_core = { git = "https://github.com/earthlings-dev/serde.git" }
+serde_derive = { git = "https://github.com/earthlings-dev/serde.git" }
+serde_json = { git = "https://github.com/earthlings-dev/json.git" }
+anyhow = { git = "https://github.com/earthlings-dev/anyhow.git" }
+clap = { git = "https://github.com/earthlings-dev/clap.git" }
+clap_builder = { git = "https://github.com/earthlings-dev/clap.git" }
+clap_lex = { git = "https://github.com/earthlings-dev/clap.git" }
+semver = { git = "https://github.com/earthlings-dev/semver.git" }
+thiserror = { git = "https://github.com/earthlings-dev/thiserror.git" }
+thiserror-impl = { git = "https://github.com/earthlings-dev/thiserror.git" }
+
 [profile.bench]
 lto = "thin"
 
 [dev-dependencies]
-serde_json = "1.0.120"
+serde_json = { workspace = true }
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

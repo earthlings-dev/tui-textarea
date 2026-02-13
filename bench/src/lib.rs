@@ -1,10 +1,10 @@
 // We use empty backend for our benchmark instead of tui::backend::TestBackend to make impact of benchmark from tui-rs
 // as small as possible.
 
-use ratatui::backend::{Backend, WindowSize};
+use ratatui::Terminal;
+use ratatui::backend::{Backend, ClearType, WindowSize};
 use ratatui::buffer::Cell;
 use ratatui::layout::{Position, Size};
-use ratatui::Terminal;
 use std::io;
 use tui_textarea::TextArea;
 
@@ -40,6 +40,8 @@ impl Default for DummyBackend {
 }
 
 impl Backend for DummyBackend {
+    type Error = io::Error;
+
     #[inline]
     fn draw<'a, I>(&mut self, _content: I) -> io::Result<()>
     where
@@ -59,18 +61,12 @@ impl Backend for DummyBackend {
     }
 
     #[inline]
-    fn get_cursor(&mut self) -> io::Result<(u16, u16)> {
-        Ok(self.cursor)
-    }
-
-    #[inline]
-    fn set_cursor(&mut self, x: u16, y: u16) -> io::Result<()> {
-        self.cursor = (x, y);
+    fn clear(&mut self) -> io::Result<()> {
         Ok(())
     }
 
     #[inline]
-    fn clear(&mut self) -> io::Result<()> {
+    fn clear_region(&mut self, _clear_type: ClearType) -> io::Result<()> {
         Ok(())
     }
 

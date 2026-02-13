@@ -5,8 +5,7 @@ use crate::util::{num_digits, spaces};
 use ratatui::text::Line;
 use std::borrow::Cow;
 use std::cmp::Ordering;
-use std::iter;
-#[cfg(feature = "tuirs")]
+#[cfg(all(feature = "tuirs", not(feature = "ratatui")))]
 use tui::text::Spans as Line;
 use unicode_width::UnicodeWidthChar as _;
 
@@ -61,7 +60,7 @@ impl DisplayTextBuilder {
     fn build<'s>(&mut self, s: &'s str) -> Cow<'s, str> {
         if let Some(ch) = self.mask {
             // Note: We don't need to track width on masking text since width of tab character is fixed
-            let masked = iter::repeat(ch).take(s.chars().count()).collect();
+            let masked = std::iter::repeat_n(ch, s.chars().count()).collect();
             return Cow::Owned(masked);
         }
 

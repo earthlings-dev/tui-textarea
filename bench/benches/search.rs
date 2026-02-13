@@ -1,6 +1,6 @@
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use tui_textarea::TextArea;
-use tui_textarea_bench::{dummy_terminal, TerminalExt, LOREM};
+use tui_textarea_bench::{LOREM, TerminalExt, dummy_terminal};
 
 #[inline]
 fn run(pat: &str, mut textarea: TextArea<'_>, forward: bool) {

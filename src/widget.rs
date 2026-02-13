@@ -8,7 +8,7 @@ use crate::util::num_digits;
 use ratatui::text::Line;
 use std::cmp;
 use std::sync::atomic::{AtomicU64, Ordering};
-#[cfg(feature = "tuirs")]
+#[cfg(all(feature = "tuirs", not(feature = "ratatui")))]
 use tui::text::Spans as Line;
 
 // &mut 'a (u16, u16, u16, u16) is not available since `render` method takes immutable reference of TextArea
@@ -156,7 +156,7 @@ impl Widget for &TextArea<'_> {
             text_area = b.inner(area);
             // ratatui does not need `clone()` call because `Block` implements `WidgetRef` and `&T` implements `Widget`
             // where `T: WidgetRef`. So `b.render` internally calls `b.render_ref` and it doesn't move out `self`.
-            #[cfg(feature = "tuirs")]
+            #[cfg(all(feature = "tuirs", not(feature = "ratatui")))]
             let b = b.clone();
             b.render(area, buf)
         }

@@ -1,7 +1,8 @@
 [package]
 name = "tui-textarea-bench"
 version = "0.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 publish = false
 license = "MIT"
 
@@ -9,12 +10,12 @@ license = "MIT"
 bench = false
 
 [dependencies]
-tui-textarea = { path = "..", features = ["no-backend", "search"] }
-ratatui = { version = "0.29.0", default-features = false }
+tui-textarea = { workspace = true, features = ["no-backend", "search"] }
+ratatui = { workspace = true }
 
 [dev-dependencies]
-criterion = "0.5"
-rand = { version = "0.8.5", features = ["small_rng"] }
+criterion = { workspace = true }
+rand = { workspace = true }
 
 [[bench]]
 name = "insert"

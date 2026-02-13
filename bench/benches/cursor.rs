@@ -1,6 +1,8 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use std::hint::black_box;
+
+use criterion::{Criterion, criterion_group, criterion_main};
 use tui_textarea::{CursorMove, TextArea};
-use tui_textarea_bench::{dummy_terminal, TerminalExt, LOREM};
+use tui_textarea_bench::{LOREM, TerminalExt, dummy_terminal};
 
 #[derive(Clone, Copy)]
 enum Restore {
@@ -43,11 +45,11 @@ fn run(
             textarea.move_cursor(*m);
             term.draw_textarea(&textarea);
         }
-        if let Some(m) = restore.cursor_move() {
-            if textarea.cursor() == prev {
-                textarea.move_cursor(m);
-                prev = textarea.cursor();
-            }
+        if let Some(m) = restore.cursor_move()
+            && textarea.cursor() == prev
+        {
+            textarea.move_cursor(m);
+            prev = textarea.cursor();
         }
     }
 

@@ -22,7 +22,6 @@ impl From<KeyEvent> for Input {
     /// So the `shift` field of the returned `Input` instance is always `false` except for combinations with arrow keys.
     /// For example, `termion::event::Key::Char('A')` is converted to `Input { key: Key::Char('A'), shift: false, .. }`.
     fn from(key: KeyEvent) -> Self {
-        #[cfg(feature = "termion")]
         let (ctrl, alt, shift) = match key {
             KeyEvent::Ctrl(_)
             | KeyEvent::CtrlUp
@@ -43,14 +42,6 @@ impl From<KeyEvent> for Input {
             _ => (false, false, false),
         };
 
-        #[cfg(feature = "tuirs-termion")]
-        let (ctrl, alt, shift) = match key {
-            KeyEvent::Ctrl(_) => (true, false, false),
-            KeyEvent::Alt(_) => (false, true, false),
-            _ => (false, false, false),
-        };
-
-        #[cfg(feature = "termion")]
         let key = match key {
             KeyEvent::Char('\n' | '\r') => Key::Enter,
             KeyEvent::Char(c) | KeyEvent::Ctrl(c) | KeyEvent::Alt(c) => Key::Char(c),
@@ -67,26 +58,6 @@ impl From<KeyEvent> for Input {
             }
             KeyEvent::Home | KeyEvent::CtrlHome => Key::Home,
             KeyEvent::End | KeyEvent::CtrlEnd => Key::End,
-            KeyEvent::PageUp => Key::PageUp,
-            KeyEvent::PageDown => Key::PageDown,
-            KeyEvent::BackTab => Key::Tab,
-            KeyEvent::Delete => Key::Delete,
-            KeyEvent::Esc => Key::Esc,
-            KeyEvent::F(x) => Key::F(x),
-            _ => Key::Null,
-        };
-
-        #[cfg(feature = "tuirs-termion")]
-        let key = match key {
-            KeyEvent::Char('\n' | '\r') => Key::Enter,
-            KeyEvent::Char(c) | KeyEvent::Ctrl(c) | KeyEvent::Alt(c) => Key::Char(c),
-            KeyEvent::Backspace => Key::Backspace,
-            KeyEvent::Left => Key::Left,
-            KeyEvent::Right => Key::Right,
-            KeyEvent::Up => Key::Up,
-            KeyEvent::Down => Key::Down,
-            KeyEvent::Home => Key::Home,
-            KeyEvent::End => Key::End,
             KeyEvent::PageUp => Key::PageUp,
             KeyEvent::PageDown => Key::PageDown,
             KeyEvent::BackTab => Key::Tab,
@@ -158,13 +129,9 @@ mod tests {
             (KeyEvent::F(1), input(Key::F(1), false, false, false)),
             (KeyEvent::BackTab, input(Key::Tab, false, false, false)),
             (KeyEvent::Null, input(Key::Null, false, false, false)),
-            #[cfg(feature = "termion")]
             (KeyEvent::ShiftDown, input(Key::Down, false, false, true)),
-            #[cfg(feature = "termion")]
             (KeyEvent::AltUp, input(Key::Up, false, true, false)),
-            #[cfg(feature = "termion")]
             (KeyEvent::CtrlLeft, input(Key::Left, true, false, false)),
-            #[cfg(feature = "termion")]
             (KeyEvent::CtrlHome, input(Key::Home, true, false, false)),
         ] {
             assert_eq!(Input::from(from), to, "{:?} -> {:?}", from, to);
